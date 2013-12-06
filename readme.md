@@ -19,7 +19,7 @@ For more information on what `generator-webapp-php` can do for you, take a look 
 ## Getting Started
 
 - Install: `npm install -g generator-webapp-php`
-- Run: `yo webapp`
+- Run: `yo webapp-php`
 - Run `grunt` for building and `grunt serve` for preview
 
 
@@ -43,7 +43,7 @@ See the [contributing docs](https://github.com/yeoman/yeoman/blob/master/contrib
 
 Note: We are regularly asked whether we can add or take away features. If a change is good enough to have a positive impact on all users, we are happy to consider it.
 
-If not, `generator-webapp-php` is fork-friendly and you can always maintain a custom version which you `npm install && npm link` to continue using via `yo webapp` or a name of your choosing.
+If not, `generator-webapp-php` is fork-friendly and you can always maintain a custom version which you `npm install && npm link` to continue using via `yo webapp-php` or a name of your choosing.
 
 
 ## License

@@ -12,7 +12,7 @@ describe('Webapp generator test', function () {
         return done(err);
       }
 
-      this.webapp = helpers.createGenerator('webapp:app', [
+      this.webappPhp = helpers.createGenerator('webapp-php:app', [
         '../../app', [
           helpers.createDummyGenerator(),
           'mocha:app'
@@ -40,13 +40,13 @@ describe('Webapp generator test', function () {
       'app/styles/main.scss'
     ];
 
-    helpers.mockPrompt(this.webapp, {
+    helpers.mockPrompt(this.webappPhp, {
       features: ['compassBootstrap']
     });
 
-    this.webapp.coffee = true;
-    this.webapp.options['skip-install'] = true;
-    this.webapp.run({}, function () {
+    this.webappPhp.coffee = true;
+    this.webappPhp.options['skip-install'] = true;
+    this.webappPhp.run({}, function () {
       helpers.assertFiles(expected);
       done();
     });
@@ -65,13 +65,13 @@ describe('Webapp generator test', function () {
       'app/styles/main.scss'
     ];
 
-    helpers.mockPrompt(this.webapp, {
+    helpers.mockPrompt(this.webappPhp, {
       features: ['compassBootstrap']
     });
 
-    this.webapp.coffee = false;
-    this.webapp.options['skip-install'] = true;
-    this.webapp.run({}, function () {
+    this.webappPhp.coffee = false;
+    this.webappPhp.options['skip-install'] = true;
+    this.webappPhp.run({}, function () {
       helpers.assertFiles(expected);
       done();
     });
@@ -90,12 +90,12 @@ describe('Webapp generator test', function () {
       'app/styles/main.scss'
     ];
 
-    helpers.mockPrompt(this.webapp, {
+    helpers.mockPrompt(this.webappPhp, {
       features: ['compassBootstrap']
     });
 
-    this.webapp.options['skip-install'] = true;
-    this.webapp.run({}, function () {
+    this.webappPhp.options['skip-install'] = true;
+    this.webappPhp.run({}, function () {
       helpers.assertFiles(expected);
       done();
     });
