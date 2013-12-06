@@ -1,6 +1,6 @@
 # Web app generator [![Build Status](https://secure.travis-ci.org/amercier/generator-webapp-php.png?branch=master)](http://travis-ci.org/amercier/generator-webapp-php)
 
-Yeoman generator that scaffolds out a front-end web app.
+Yeoman generator that scaffolds out a front-end web app with a PHP background.
 
 ## Features
 
