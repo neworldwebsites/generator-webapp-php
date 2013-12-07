@@ -154,6 +154,6 @@ AppGenerator.prototype.app = function app() {
     );
   }
   else {
-    this.write('app/scripts/main.js', 'console.log(\'\\\'Allo \\\'Allo!\');');
+    this.copy('main.js', 'app/scripts/main.js');
   }
 };
