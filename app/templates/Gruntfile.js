@@ -15,6 +15,9 @@ module.exports = function (grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
+    // Expose the proxy function to use in the connect middleware
+    var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
+
     // Define the configuration for all the tasks
     grunt.initConfig({
 
@@ -78,13 +81,39 @@ module.exports = function (grunt) {
                 // Change this to '0.0.0.0' to access the server from outside
                 hostname: 'localhost'
             },
+            proxies: [
+                {
+                    context: '/api',
+                    host: 'localhost',
+                    port: 9000
+                }
+            ],
             livereload: {
                 options: {
                     open: true,
                     base: [
                         '.tmp',
                         '<%%= yeoman.app %>'
-                    ]
+                    ],
+                    middleware: function (connect, options) {
+                        var middlewares = [];
+                        var directory = options.directory || options.base[options.base.length - 1];
+                        if (!Array.isArray(options.base)) {
+                            options.base = [options.base];
+                        }
+                        options.base.forEach(function(base) {
+                            // Serve static files.
+                            middlewares.push(connect.static(base));
+                        });
+
+                        // Setup the proxy
+                        middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
+
+                        // Make directory browse-able.
+                        middlewares.push(connect.directory(directory));
+
+                        return middlewares;
+                    }
                 }
             },
             test: {
@@ -111,8 +140,7 @@ module.exports = function (grunt) {
             options: {
                 port: 8000,
                 // Change this to '0.0.0.0' to access the server from outside.
-                hostname: 'localhost',
-                livereload: false
+                hostname: '127.0.0.1'
             },
             livereload: {
                 options: {
@@ -416,6 +444,7 @@ module.exports = function (grunt) {
             'clean:server',
             'concurrent:server',
             'autoprefixer',
+            'configureProxies',
             'php:livereload',
             'connect:livereload',
             'watch'
