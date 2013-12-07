@@ -9,16 +9,44 @@ try {
     ob_start();
 
     $response = array();
-    $min = 0;
-    $max = 10;
     $allowedMethods = array('GET');
     $allowedHeaders = array();
 
-    $https = array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] === 'on';
-    $port = intval($_SERVER['SERVER_PORT']);
-    $url = 'http' . ($https ? 's' : '') . '://' . $_SERVER['SERVER_NAME']
-        . ($https && $port !== 443 || !$https && $port !== 80 ? ":$port" : '')
-        . $_SERVER['REQUEST_URI'];
+    $resources = array(
+        'html5-boilerplate' => array(
+            'name' => 'HTML5 Boilerplate',
+            'description' => 'HTML5 Boilerplate is a professional front-end template'
+                . ' for building fast, robust, and adaptable web apps or sites.',
+        ),
+        'bootstrap' => array(
+            'name' => 'Bootstrap',
+            'description' => 'Sleek, intuitive, and powerful mobile first front-end'
+                . ' framework for faster and easier web development.',
+        ),
+        'modernizr' => array(
+            'name' => 'Modernizr',
+            'description' => 'Modernizr is an open-source JavaScript library that'
+                .   ' helps you build the next generation of HTML5 and CSS3-powered'
+                .   ' websites.',
+        ),
+    );
+
+    // Get headers and normalize them
+    if (function_exists('getallheaders')) {
+        $headers = getallheaders();
+    }
+    else {
+        $headers = array();
+        foreach ($_SERVER as $name => $value) {
+            if (preg_match('/^HTTP_(.*)$/', $name, $matches)) {
+                $headers[str_replace('_', '-', $matches[1])] = $value;
+            }
+        }
+    }
+    foreach ($headers as $name => $value) {
+        unset($headers[$name]);
+        $headers[ucwords(strtolower($name))] = $value;
+    }
 
     // Handle OPTIONS method
     if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
@@ -39,25 +67,8 @@ try {
         );
     }
 
-    // Get headers and normalize them
-    if (function_exists('getallheaders')) {
-        $headers = getallheaders();
-    }
-    else {
-        $headers = array();
-        foreach ($_SERVER as $name => $value) {
-            if (preg_match('/^HTTP_(.*)$/', $name, $matches)) {
-                $headers[str_replace('_', '-', $matches[1])] = $value;
-            }
-        }
-    }
-    foreach ($headers as $name => $value) {
-        unset($headers[$name]);
-        $headers[ucwords(strtolower($name))] = $value;
-    }
-
     // Reject if not acceptable
-    if (!array_key_exists('Accept', $headers) || $headers['Accept'] !== 'application/json') {
+    if (!array_key_exists('Accept', $headers) || !in_array('application/json', explode(', ', $headers['Accept']))) {
         throw new Exception('Only application/json is acceptable');
     }
 
@@ -67,18 +78,17 @@ try {
      * -------------------------------------------------------------------------
      */
     if (isset($_GET['id'])) {
-        if (!preg_match('/^[0-9]+$/', $id = $_GET['id'])) {
-            throw new Exception('Resource id must be a positive integer', 400);
+        if (!preg_match('/^[a-z0-9-]+$/', $id = $_GET['id'])) {
+            throw new Exception('Resource id must contain only alphanumeric and - characters', 400);
         }
-        if (($id = intval($id)) < $min || $id > $max) {
+        if (!array_key_exists($id, $resources)) {
             throw new Exception("Resource with id $id does not exist", 404);
         }
-        $response = array_merge($response, array(
-            'id' => $id,
-            'description' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                . ' Sed non risus. Suspendisse lectus tortor, dignissim sit amet,'
-                . ' adipiscing nec, ultricies sed, dolor.',
-        ));
+        $response = array_merge(
+            $response,
+            array('id' => $id),
+            $resources[$id]
+        );
     }
     /**
      * -------------------------------------------------------------------------
@@ -86,12 +96,15 @@ try {
      * -------------------------------------------------------------------------
      */
     else {
+        $url = 'http' . (array_key_exists('HTTPS', $_SERVER) && $_SERVER['HTTPS'] === 'on' ? 's' : '') . '://'
+            . $headers['Host'] . $_SERVER['REQUEST_URI'];
+
         $response['resources'] = array();
-        for ($i = $min; $i <= $max; $i++) {
+        foreach ($resources as $id => $resource) {
             array_push($response['resources'], array(
-                'id' => $i,
-                'name' => "Resource $i",
-                'href' => preg_match('/\.php$/', $url) ? "$url?id=$i" : "$url/$i",
+                'id' => $id,
+                'name' => $resource['name'],
+                'href' => preg_match('/\.php$/', $url) ? "$url?id=$id" : "$url/$id",
             ));
         }
     }
