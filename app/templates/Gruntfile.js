@@ -106,6 +106,21 @@ module.exports = function (grunt) {
             }
         },
 
+        // Grunt php server
+        php: {
+            options: {
+                port: 8000,
+                // Change this to '0.0.0.0' to access the server from outside.
+                hostname: 'localhost',
+                livereload: false
+            },
+            livereload: {
+                options: {
+                    base: '<%%= yeoman.app %>',
+                }
+            },
+        },
+
         // Empties folders to start fresh
         clean: {
             dist: {
@@ -401,6 +416,7 @@ module.exports = function (grunt) {
             'clean:server',
             'concurrent:server',
             'autoprefixer',
+            'php:livereload',
             'connect:livereload',
             'watch'
         ]);
