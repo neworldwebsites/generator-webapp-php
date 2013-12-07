@@ -8,7 +8,8 @@
     "app",
     "front-end",
     "h5bp",
-    "modernizr"
+    "modernizr",
+    "php"
   ],
   "homepage": "https://github.com/amercier/generator-webapp-php",
   "bugs": "https://github.com/amercier/generator-webapp-php/issues",
