@@ -101,6 +101,10 @@ AppGenerator.prototype.h5bp = function h5bp() {
   this.copy('htaccess', 'app/.htaccess');
 };
 
+AppGenerator.prototype.api = function api() {
+  this.copy('resource.php', 'app/api/resource.php');
+};
+
 AppGenerator.prototype.mainStylesheet = function mainStylesheet() {
   var css = 'main.' + (this.compassBootstrap ? 's' : '') + 'css';
   this.copy(css, 'app/styles/' + css);
@@ -137,6 +141,7 @@ AppGenerator.prototype.writeIndex = function writeIndex() {
 
 AppGenerator.prototype.app = function app() {
   this.mkdir('app');
+  this.mkdir('app/api');
   this.mkdir('app/scripts');
   this.mkdir('app/styles');
   this.mkdir('app/images');
