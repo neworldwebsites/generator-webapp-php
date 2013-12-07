@@ -85,7 +85,7 @@ module.exports = function (grunt) {
                 {
                     context: '/api',
                     host: 'localhost',
-                    port: 9000
+                    port: 8000
                 }
             ],
             livereload: {
@@ -101,13 +101,14 @@ module.exports = function (grunt) {
                         if (!Array.isArray(options.base)) {
                             options.base = [options.base];
                         }
+
+                        // Setup the proxy
+                        middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
+
                         options.base.forEach(function(base) {
                             // Serve static files.
                             middlewares.push(connect.static(base));
                         });
-
-                        // Setup the proxy
-                        middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
 
                         // Make directory browse-able.
                         middlewares.push(connect.directory(directory));
@@ -142,7 +143,7 @@ module.exports = function (grunt) {
                 // Change this to '0.0.0.0' to access the server from outside.
                 hostname: '127.0.0.1'
             },
-            livereload: {
+            server: {
                 options: {
                     base: '<%%= yeoman.app %>',
                 }
@@ -445,7 +446,7 @@ module.exports = function (grunt) {
             'concurrent:server',
             'autoprefixer',
             'configureProxies',
-            'php:livereload',
+            'php:server',
             'connect:livereload',
             'watch'
         ]);
