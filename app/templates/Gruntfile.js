@@ -15,9 +15,6 @@ module.exports = function (grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
-    // Expose the proxy function to use in the connect middleware
-    var proxySnippet = require('grunt-connect-proxy/lib/utils').proxyRequest;
-
     // Define the configuration for all the tasks
     grunt.initConfig({
 
