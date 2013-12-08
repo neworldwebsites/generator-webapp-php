@@ -1,6 +1,6 @@
 {
   "name": "generator-webapp-php",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "description": "Scaffold out a front-end web app with a PHP back-end",
   "keywords": [
     "yeoman-generator",
