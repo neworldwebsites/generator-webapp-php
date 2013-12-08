@@ -15,6 +15,27 @@ module.exports = function (grunt) {
     // Time how long tasks take. Can help when optimizing build times
     require('time-grunt')(grunt);
 
+    var proxyMiddleware = function (connect, options) {
+        var middlewares = [];
+        var directory = options.directory || options.base[options.base.length - 1];
+        if (!Array.isArray(options.base)) {
+            options.base = [options.base];
+        }
+
+        // Setup the proxy
+        middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
+
+        options.base.forEach(function(base) {
+            // Serve static files.
+            middlewares.push(connect.static(base));
+        });
+
+        // Make directory browse-able.
+        middlewares.push(connect.directory(directory));
+
+        return middlewares;
+    };
+
     // Define the configuration for all the tasks
     grunt.initConfig({
 
@@ -92,26 +113,7 @@ module.exports = function (grunt) {
                         '.tmp',
                         '<%%= yeoman.app %>'
                     ],
-                    middleware: function (connect, options) {
-                        var middlewares = [];
-                        var directory = options.directory || options.base[options.base.length - 1];
-                        if (!Array.isArray(options.base)) {
-                            options.base = [options.base];
-                        }
-
-                        // Setup the proxy
-                        middlewares.push(require('grunt-connect-proxy/lib/utils').proxyRequest);
-
-                        options.base.forEach(function(base) {
-                            // Serve static files.
-                            middlewares.push(connect.static(base));
-                        });
-
-                        // Make directory browse-able.
-                        middlewares.push(connect.directory(directory));
-
-                        return middlewares;
-                    }
+                    middleware: proxyMiddleware
                 }
             },
             test: {
@@ -128,7 +130,8 @@ module.exports = function (grunt) {
                 options: {
                     open: true,
                     base: '<%%= yeoman.dist %>',
-                    livereload: false
+                    livereload: false,
+                    middleware: proxyMiddleware
                 }
             }
         },
@@ -145,6 +148,11 @@ module.exports = function (grunt) {
                     base: '<%%= yeoman.app %>',
                 }
             },
+            dist: {
+                options: {
+                    base: '<%%= yeoman.dist %>',
+                }
+            }
         },
 
         // Empties folders to start fresh
@@ -379,6 +387,7 @@ module.exports = function (grunt) {
                     cwd: '<%%= yeoman.app %>',
                     dest: '<%%= yeoman.dist %>',
                     src: [
+                        'api/{,*/}*.*',
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'images/{,*/}*.webp',
@@ -435,7 +444,12 @@ module.exports = function (grunt) {
 
     grunt.registerTask('serve', function (target) {
         if (target === 'dist') {
-            return grunt.task.run(['build', 'connect:dist:keepalive']);
+            return grunt.task.run([
+              'build',
+              'configureProxies',
+              'php:dist',
+              'connect:dist:keepalive'
+            ]);
         }
 
         grunt.task.run([
