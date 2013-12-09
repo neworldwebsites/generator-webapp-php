@@ -1,7 +1,7 @@
 {
   "name": "generator-webapp-php",
   "version": "0.3.0",
-  "description": "Scaffold out a front-end web app with a PHP back-end",
+  "description": "Scaffold out a front-end web app with a PHP back-end. Based on generator-webapp. /api is redirected by grunt-connect-proxy to the PHP built-in server using grunt-php",
   "keywords": [
     "yeoman-generator",
     "web",
