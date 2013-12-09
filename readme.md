@@ -2,8 +2,8 @@
 
 Yeoman generator that scaffolds out a front-end web app with a PHP back-end.
 
-[![Build Status](https://secure.travis-ci.org/amercier/generator-webapp-php.png?branch=master)](http://travis-ci.org/amercier/generator-webapp-php)
 [![NPM version](https://badge.fury.io/js/generator-webapp-php.png)](http://badge.fury.io/js/generator-webapp-php)
+[![Build Status](https://secure.travis-ci.org/amercier/generator-webapp-php.png?branch=master)](http://travis-ci.org/amercier/generator-webapp-php)
 [![Dependency Status](https://gemnasium.com/amercier/generator-webapp-php.png)](https://gemnasium.com/amercier/generator-webapp-php)
 
 Based on [generator-webapp](https://github.com/yeoman/generator-webapp). Adds
